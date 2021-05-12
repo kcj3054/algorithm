@@ -1,0 +1,89 @@
+/* ===============페그 솔리테어 ===================*/
+#include <iostream>
+
+using namespace std;
+
+int t, pinNum, moveNum, _cnt;
+char map[5][9];
+int dx[] = { -1, 0, 1, 0 };
+int dy[] = { 0, 1, 0, -1 };
+bool range(int x, int y) {
+	if (x < 0 || y < 0 || x >= 5 || y >= 9)return false;
+	else return true;
+}
+void dfs(int move) {
+
+	bool flag = false;
+
+	for (int x = 0; x < 5; x++)
+	{
+		for (int y = 0; y < 9; y++)
+		{
+			if (map[x][y] == 'o') {
+
+				for (int k = 0; k < 4; k++)
+				{
+					int nx = x + dx[k];
+					int ny = y + dy[k];
+					int nnx = x + dx[k] + dx[k];
+					int nny = y + dy[k] + dy[k];
+
+					if (range(nnx, nny)) {
+						if (map[nx][ny] == 'o' && map[nnx][nny] == '.') {
+							flag = true;
+							map[x][y] = '.';
+							map[nx][ny] = '.';
+							map[nnx][nny] = 'o';
+							dfs(move + 1);
+							map[x][y] = 'o';
+							map[nx][ny] = 'o';
+							map[nnx][nny] = '.';
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (flag == false) {
+		for (int i = 0; i < 5; i++)
+		{
+			for (int j = 0; j < 9; ++j)
+			{
+				if (map[i][j] == 'o') pinNum++;
+			}
+		}
+		if (pinNum < _cnt) {
+			_cnt = pinNum;
+			moveNum = move;
+		}
+	}
+	
+}
+void Input() {
+
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 9; j++) {
+			cin >> map[i][j];
+			if (map[i][j] == 'o') _cnt++;
+		}		
+	}
+		
+}
+void solve() {
+
+	Input();
+	dfs(0);
+
+	cout << _cnt << " " << moveNum << endl;
+}
+int main() {
+
+	cin >> t;
+	while (t--)
+	{
+		solve();
+	}
+
+	return 0;
+}
