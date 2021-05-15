@@ -1,0 +1,94 @@
+#include <iostream>
+#define endl '\n'
+using namespace std;
+
+int paper[6] = { 0, 5, 5, 5, 5, 5 };
+int map[10][10];
+int ans, cnt;
+const int INF = 987654321;
+
+bool range(int x, int y) {
+	if (x < 0 || y < 0 || x > 10 || y > 10) return false;
+	else return true;
+}
+void dfs(int x, int y) {
+
+	//한칸씩 옆으로 가다가 col이 맨 오른쪽이면 다음 줄 진행
+	if (y == 10) {
+		dfs(x + 1, 0);
+		//cout << "cnt : " << cnt << endl;
+		return;
+	}
+
+	//마지막줄까지 다했다
+	if (x == 10) {
+		if (ans > cnt) ans = cnt;
+		return;
+	}
+
+	//덮을 것이 없다 
+	if (map[x][y] == 0) {
+		dfs(x, y + 1);
+		return ;
+	}
+
+	//모든 경우의 색종이 알아보기
+	// [x, x + i)
+	// x + i - 1 < 10
+	// x + i < 11
+	// x + i <= 10
+	for (int i = 5; i >= 1; i--)
+	{
+		int nx = x + i;
+		int ny = y + i;
+		
+		bool flag = true;
+
+		if (paper[i] == 0 || range(nx, ny) == false) continue;
+		//길이 가능하다면 
+
+		for (int j = 0; j < i; j++)
+		{
+			for (int k = 0; k < i; k++)
+			{
+				//len길이의 색종이가 안되는 부분이 있다면 
+				if (map[x + j][y + k] == 0) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag == false) break;
+		}
+
+		if (flag == false) continue;
+		//len길이의 색종이가 가능하다면 
+		for (int j = 0; j < i; j++)
+		{
+			for (int k = 0; k < i; ++k)
+				map[x + j][y + k] = 0;
+		}
+		paper[i]--;
+		cnt++;
+		dfs(x, y + i);
+		for (int j = 0; j < i; j++)
+		{
+			for (int k = 0; k < i; ++k)
+				map[x + j][y + k] = 1;
+		}
+		paper[i]++;
+		cnt--;
+	}
+}
+void Input() {
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 10; j++) cin >> map[i][j];
+	ans = INF;
+}
+int main() {
+	Input();
+	
+	dfs(0, 0);
+	if (ans == INF) cout << "-1" << endl;
+	else cout << ans << endl;
+	return 0;
+}
