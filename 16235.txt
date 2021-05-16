@@ -1,0 +1,128 @@
+//나무재테크 
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <vector>
+
+#define MAX 11
+#define endl '\n'
+using namespace std;
+
+int dx[] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+int dy[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+int n, m, k, ans;
+int Energy[MAX][MAX];
+int InsertEnergy[MAX][MAX];
+
+vector<int> MAP[MAX][MAX];
+
+void Input() {
+
+	cin >> n >> m >> k;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			cin >> InsertEnergy[i][j];
+			Energy[i][j] = 5;
+		}
+	}
+
+	for (int i = 0; i < m; i++)
+	{
+		int a, b, c;
+		cin >> a >> b >> c;
+		MAP[a][b].push_back(c);
+	}
+}
+void springSummer() {
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			if (MAP[i][j].size() == 0)continue;
+
+			int DieEnergy = 0;
+			vector<int> tmp;
+
+			sort(MAP[i][j].begin(), MAP[i][j].end());
+
+			for (int k = 0; k < MAP[i][j].size(); k++)
+			{
+				int _age = MAP[i][j][k];
+				if (Energy[i][j] >= _age) {
+					Energy[i][j] -= _age;
+					tmp.push_back(_age + 1);
+				}
+				else
+				{
+					DieEnergy += _age / 2; //양분으로 
+				}
+				
+			}
+			MAP[i][j].clear();
+
+			for (int k = 0; k < tmp.size(); k++)
+			{
+				MAP[i][j].push_back(tmp[k]);
+			}
+			Energy[i][j] += DieEnergy;
+		}
+	}
+}
+void fall() {
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; ++j)
+		{
+			for (int k = 0; k < MAP[i][j].size(); k++)
+			{
+				if (MAP[i][j][k] % 5 == 0) {
+
+					for (int l = 0; l < 8; l++)
+					{
+						int nx = i + dx[l];
+						int ny = j + dy[l];
+
+						if (nx < 1 || ny < 1 || nx > n || ny > n)continue;
+
+						MAP[nx][ny].push_back(1);
+					}
+				}
+			}
+		}
+	}
+}
+
+void winter() {
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; ++j)
+		{
+			Energy[i][j] += InsertEnergy[i][j];
+		}
+	}
+}
+int solve() {
+	
+	for (int i = 0; i < k; i++)
+	{
+		springSummer();
+		fall();
+		winter();
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; ++j)
+		{
+			ans += MAP[i][j].size();
+		}
+	}
+	return ans;
+}
+int main() {
+
+	Input();
+	cout << solve() << endl;
+	return 0;
+}
