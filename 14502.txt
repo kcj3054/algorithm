@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+using namespace std;
+int map[300][300];
+
+int m, n, cnt, ans = -1;
+int dx[] = {-1, 0, 1, 0};
+int dy[] = { 0, 1, 0, -1};
+vector<pair<int, int>> virus;
+
+void safe() {
+	queue<pair<int, int>> q;
+	bool visited[300][300] = { 0, };
+
+	for (int i = 0; i < virus.size(); i++)
+	{
+		q.push({ virus[i].first, virus[i].second });
+	}
+
+	//벽있는곳 방문 처리 
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (map[i][j] == 1) visited[i][j] = 1;
+		}
+	}
+
+	while (!q.empty())
+	{
+		int x = q.front().first;
+		int y = q.front().second;
+		visited[x][y] = 2;
+		q.pop();
+
+		for (int i = 0; i < 4; i++)
+		{
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+
+			if (nx < 0 || ny < 0 || nx >= n || ny >= m ) continue;
+			if (visited[nx][ny] == 0) {
+				q.push({ nx, ny });
+				visited[nx][ny] = 2;
+			}
+		}
+	}
+
+	//안전지대 검사 
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (visited[i][j] == 0) cnt++;
+		}
+	}
+}
+int main() {
+
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			cin >> map[i][j];
+			if (map[i][j] == 2) {
+				virus.push_back({ i, j });
+			}
+		}
+	}
+
+	int N = n * m;
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = i + 1; j < N; j++)
+		{
+			for (int k = j + 1; k < N; k++)
+			{
+				int x1 = i / m;
+				int y1 = i % m;
+
+				int x2 = j / m;
+				int y2 = j % m;
+
+				int x3 = k / m;
+				int y3 = k % m;
+
+				if (map[x1][y1] == 0 && map[x2][y2] == 0 && map[x3][y3] == 0) {
+					map[x1][y1] = map[x2][y2] = map[x3][y3] = 1;
+					safe();
+					ans = max(ans, cnt);
+					cnt = 0;
+					map[x1][y1] = map[x2][y2] = map[x3][y3] = 0;
+				}
+			}
+		}
+	}
+	cout << ans << endl;
+	return 0;
+}
