@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+#include <string>
+
+struct point {
+	int z;
+	int x;
+	int y;
+};
+using namespace std;
+string map[40][40];
+int visited[40][40][40];
+point s;
+
+int l, r, c;
+int m, n, cnt, ans = -1;
+int dx[] = { -1, 0, 1, 0, 0, 0 };
+int dy[] = { 0, 1, 0, -1, 0, 0 };
+int dz[] = { 0, 0, 0, 0, -1, 1 };
+
+bool range(int nz, int nx, int ny) {
+	if (nx >= 0 && ny >= 0 && nz >= 0 && nx < r && ny < c && nz < l) return true;
+	else return false;
+}
+void bfs(int z, int x, int y) {
+
+	queue<point> q;
+	q.push({ z, x, y });
+	visited[z][x][y] = 0;
+	cnt = 0;
+
+	while (!q.empty())
+	{
+		int z = q.front().z;
+		int x = q.front().x;
+		int y = q.front().y;
+		q.pop();
+
+		if (map[z][x][y] == 'E') {
+			cout << "Escaped in " << visited[z][x][y] << " minute(s)." << endl;
+			return;
+		}
+
+		for (int i = 0; i < 6; i++)
+		{
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			int nz = z + dz[i];
+
+			//
+			if (!range(nz, nx, ny) || visited[nz][nx][ny] != -1 || map[nz][nx][ny] == '#')continue;
+			visited[nz][nx][ny] = visited[z][x][y] + 1;
+			q.push({ nz, nx, ny });
+
+		}
+	}
+	cout << "Trapped!" << endl;
+	return;
+}
+
+int main() {
+
+
+	while (true)
+	{
+		memset(visited, -1, sizeof(visited));
+		cin >> l >> r >> c;
+
+		if (l == 0 && r == 0 && c == 0)break;
+
+		for (int i = 0; i < l; i++)
+		{
+			for (int j = 0; j < r; ++j)
+			{
+				cin >> map[i][j];
+				
+				for (int k = 0; k < c; k++)
+				{
+
+					if (map[i][j][k] == 'S') {
+						s.x = i;
+						s.y = j;
+						s.z = k;
+					}
+				}
+			}
+		}
+		bfs(s.x, s.y, s.z);
+	}
+	return 0;
+}

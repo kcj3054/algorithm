@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+using namespace std;
+
+int n, m;
+int map[100][100];
+int visited[100][100];
+int dx[] = { -1, 0, 1, 0 };
+int dy[] = { 0, 1, 0, -1 };
+
+vector<pair<int, int>> virus;
+//0빈칸, 1벽, 2바이러스 놓을 수 있는 칸 
+int main() {
+
+	int ans = 987654321;
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			cin >> map[i][j];
+			if (map[i][j] == 2)virus.push_back({ i, j });
+		}
+	}
+
+	//virus 사이즈 n 
+	vector<int> v(virus.size());
+	for(int i=0; i<m; i++) {
+		v[i] = 1;
+	}
+
+	do {
+		// v[i] == 1 바이러스 있음
+		// v[i] == 0 바이러스 없음
+		// 초기화
+		int cnt = 0;
+		memset(visited, -1, sizeof(visited));
+		queue<pair<int, int>> q;
+		for (int i = 0; i < v.size(); i++)
+		{
+			if (v[i] == 1) {
+				visited[virus[i].first][virus[i].second] = 0;
+				q.push({ virus[i].first, virus[i].second });
+			}
+		}
+		
+		while (!q.empty())
+		{
+			int x = q.front().first;
+			int y = q.front().second;
+			q.pop();
+
+			for (int i = 0; i < 4; i++)
+			{
+				int nx = x + dx[i];
+				int ny = y + dy[i];
+
+				if (nx < 0 || ny < 0 || nx >= n || ny >= n || visited[nx][ny] != -1 || map[nx][ny] == 1) continue;
+				q.push({ nx, ny });
+				visited[nx][ny] = visited[x][y] + 1;
+				cnt = max(cnt, visited[nx][ny]);
+			}
+		}
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				if (map[i][j] != 1 && visited[i][j] == -1) {
+					cnt = -1;
+					break;
+				}
+			}
+		}
+		if(cnt != -1) ans = min(ans, cnt);
+
+	} while(prev_permutation(v.begin(), v.end()));
+
+
+	if(ans == 987654321) ans = -1;
+	cout << ans << endl;
+	return 0;
+}
