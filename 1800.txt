@@ -1,0 +1,105 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <memory.h>
+#include <algorithm>
+#include <climits>
+#include <deque>
+
+//
+//// 최단경로 문제
+//// 
+//// 모든 간선의 비용이 같다 (= 모든 간선 비용 1) -> bfs
+//// 
+//// 간선의 비용이 0 또는 1 -> 0-1 bfs      -> 다익스트라
+//// 간선의 비용이 다양                     -> 다익스트라
+//
+//// 0-1 bfs
+//// deque
+//// [|    a   |    a+1   |]
+//// a < b < c
+////
+//int main() {
+//	deque<int> dq;
+//	while(!dq.empty()) {
+//		int x = dq.front();
+//		dq.pop_front();
+//
+//		// dist[x] == a
+//
+//		for(auto [i, c]: g[x]) 용
+//			// i: 다음 노드
+//			// c: x->i의 비용
+//			if(c == 1) {
+//				// dist[i] == a + 1
+//				dq.push_back(i);
+//			} else {
+//				// dist[i] == a
+//				dq.push_front(i);
+//			}
+//		}
+//	}
+//}
+
+using namespace std;
+int n, p, k, le, ri, mid, ans;
+vector<pair<int, int>> v[10'001];
+int dist[10'001];
+deque<pair<int, int>> deq;
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+
+	int n, p, k;
+	cin >> n >> p >> k;
+
+	vector<vector<pair<int, int>>> g(n + 1);
+	for (int i = 0; i < p; i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		g[a].emplace_back(b, c);
+		g[b].emplace_back(a, c);
+	}
+
+	int l = 0, r = 1'000'001;
+	while (l < r) {
+		int mid = (l + r) / 2;
+
+		deque<pair<int, int>> dq;
+		vector<int> vis(n + 1, INT_MAX);
+		dq.emplace_back(1, 1);
+		vis[1] = 1;
+
+		while (!dq.empty()) {
+			auto X = dq.front();
+			auto x = X.first;
+			auto d = X.second;
+			dq.pop_front();
+
+			if (vis[x] != d) continue;
+
+			for (auto i : g[x]) {
+				if (i.second <= mid) {
+					if (vis[i.first] > vis[x]) {
+						vis[i.first] = vis[x];
+						dq.emplace_front(i.first, vis[i.first]);
+					}
+				}
+				else if (vis[x] <= k) {
+					if (vis[i.first] > vis[x] + 1) {
+						vis[i.first] = vis[x] + 1;
+						dq.emplace_back(i.first, vis[i.first]);
+					}
+				}
+			}
+		}
+
+		if (vis[n] != INT_MAX) r = mid;
+		else l = mid + 1;
+	}
+
+	if (l == 1'000'001) l = -1;
+	cout << l << endl;
+
+	return 0;
+}
