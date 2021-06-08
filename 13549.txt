@@ -1,0 +1,42 @@
+#include <iostream>
+#include <deque>
+#define MAX 100'001
+using namespace std;
+
+
+int n, k;
+int visited[MAX];
+
+int bfs() {
+	deque<int> d;
+	d.push_back(n);
+	visited[n] = 1;
+
+	while (!d.empty())
+	{
+		int now = d.front(); d.pop_front();
+		if (now == k) {
+			return visited[now] - 1;
+		}
+
+		if (now * 2 < MAX && !visited[now * 2]) {
+			d.push_front(now * 2);
+			visited[now * 2] = visited[now];
+		}
+		if (now + 1 < MAX && !visited[now + 1]) {
+			d.push_back(now + 1);
+			visited[now + 1] = visited[now] + 1;
+		}
+		if (now - 1 >= 0 && !visited[now - 1]) {
+			d.push_back(now - 1);
+			visited[now - 1] = visited[now] + 1;
+		}
+
+	}
+}
+int main() {
+
+	cin >> n >> k;
+	cout << bfs() << endl;
+	return 0;
+}
