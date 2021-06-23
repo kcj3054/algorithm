@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#define all(v) v.begin(), v.end()
+#define ll long long
+using namespace std;
+
+ll n, m, ans = 9876543211;
+int main() {
+
+	cin >> n >> m;
+	vector<ll> v;
+	v.resize(n);
+	for (int i = 0; i < n; i++)  cin >> v[i];
+	sort(v.begin(), v.end());
+	ll le = 0, ri = 1;
+	while (le < n && ri < n)
+	{
+		ll tmp = 0;
+		tmp = v[ri] - v[le];
+		if (tmp >= m) {
+			ans = min(ans, tmp);
+			le++;
+		}
+		else ri++;
+
+	}
+	cout << ans;
+	return 0;
+}
