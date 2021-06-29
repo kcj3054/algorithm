@@ -1,0 +1,61 @@
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+int n, m, start, End;
+vector<pair<int, int>> v[100001];
+vector<int> d(100001);
+priority_queue<pair<int, int>, vector<pair<int, int>>> pq;   // 내림차순 
+int visisted[100001];
+void daik(int s) {
+
+	pq.push({ 1987654321, s });
+	d[s] = 1987654321;
+	while (!pq.empty())
+	{
+		int now = pq.top().second;
+		int nowCost = pq.top().first;
+		pq.pop();
+
+		//이미 최대중량인 경우 
+		if (d[now] > nowCost) continue;
+
+		for (int i = 0; i < v[now].size(); i++)
+		{
+			int next = v[now][i].first;
+			//int nextCost = v[now][i].second;
+			int nextCost = min(v[now][i].second, nowCost);
+			// 다리엣 2, 2 3 이있으면 2가 최적이다 2를 넘게 하면 2의 다리가 무너지기 때문에 
+
+			/*if (d[next] < min(d[now], nowCost)) {
+				d[next] = min(d[now], nowCost);
+				pq.push({ nextCost, next });
+			}*/
+			if (d[next] < nextCost) {
+				d[next] = nextCost;
+				pq.push({ nextCost, next });
+			}
+		}
+	}
+}
+void Input() {
+	cin >> n >> m;
+	for (int i = 0; i < m; i++)
+	{
+		int a = 0, b = 0, c = 0; cin >> a >> b >> c;
+		v[a].push_back({ b, c });
+		v[b].push_back({ a, c });
+	}
+	cin >> start >> End;
+	fill(d.begin(), d.end(), 0);
+}
+int main() {
+
+	Input();
+	daik(start);
+
+	cout << d[End] << endl;
+	return 0;
+}
