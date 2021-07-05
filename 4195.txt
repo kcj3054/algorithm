@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <memory.h>
+#include <vector>
+
+using namespace std;
+
+vector<int> p;
+int t, m, cnt;
+string s1, s2;
+map<string, int> keyMap;
+int ans;
+int find(int x) {
+	return p[x] < 0 ? x : p[x] = find(p[x]);
+}
+int _union(int a, int b) {
+
+	a = find(a);
+	b = find(b);
+
+	if (a == b) return p[a];
+
+	//더 작은 것을 더 큰쪽으로 이동
+	if (a != b) {
+		if (a < b) {
+			p[a] += p[b];  //  
+			p[b] = a; //
+			return p[a];
+		}
+		else
+		{
+			p[b] += p[a];
+			p[a] = b;
+			return p[b];
+		}
+	}
+
+}
+void solve() {
+	cin >> m;
+	ios_base::sync_with_stdio(0); cin.tie(0);
+
+	keyMap.clear();
+	cnt = 0;
+	p.assign(m * 2 + 1, -1);
+	for (int i = 0; i < m; i++)
+	{
+		cin >> s1 >> s2;
+
+		if (keyMap.count(s1) == 0)keyMap[s1] = ++cnt;
+		if (keyMap.count(s2) == 0)keyMap[s2] = ++cnt;
+
+		cout << abs(_union(keyMap[s1], keyMap[s2])) << '\n';
+	}
+
+
+}
+int main() {
+
+	cin >> t;
+	while (t--)
+	{
+		solve();
+	}
+	return 0;
+}
