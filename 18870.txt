@@ -1,0 +1,48 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+map<int, int> m;
+int n;
+vector<int> v;
+int main() {
+	cin >> n;
+	v.resize(n);
+	for (int &i : v) cin >> i;
+
+	auto t = v;
+	sort(t.begin(), t.end());
+	t.erase(unique(t.begin(), t.end()), t.end());   // -10 -9 2 4
+	for (int i : v) {
+		cout << lower_bound(t.begin(), t.end(), i) - t.begin() << " ";
+	}
+
+}
+/*
+#include <bits/stdc++.h>
+
+#define all(v) (v).begin(), (v).end()
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	int n;
+	cin >> n;
+	vector<int> v(n);
+	for (int &i: v)
+		cin >> i;
+
+	auto t = v;  
+	sort(all(t));
+	t.erase(unique(all(t)), t.end());   //  정렬되면서 중 복 x      2  4 -10 4 -9 -> t 
+	// -10 -9 2 4   ->v 
+
+	for (int i: v) {          // t안에서 i찾기 
+		cout << lower_bound(all(t), i) - t.begin() << " ";
+	}
+}
+*/
