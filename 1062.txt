@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int n, k;
+int ans, tmp;
+int ch[26];
+vector<string> v;
+void back(int alpha, int cnt) {  // cnt : 사용한 k의 수 
+
+	if (cnt == k) {  // k개 사용 했을때 
+		int tmp = 0;
+		for (int i = 0; i < v.size(); i++) {  // 
+			bool flag = true;
+			for (char j : v[i]) { // v[i] 모든 원소 있는지 비교 
+				if (!ch[j - 'a']) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) tmp++;
+		}
+		ans = max(ans, tmp);
+		return;
+	}
+	for (int i = alpha; i < 26; i++) {
+		if (!ch[i]) {
+			ch[i]++;
+			back(i, cnt + 1);
+			ch[i]--;
+		}
+	}
+}
+int main() {
+	cin >> n >> k;
+	v.resize(n);
+	for (int i = 0; i < n; i++) {
+		cin >> v[i];
+		//anta
+		v[i] = v[i].substr(4, v[i].size());
+
+		//tica
+		for (int a = 0; a < 4; a++)v[i].pop_back();
+	}
+
+	if (k < 5) {        // anta, tica,도 못만드니 1개도 안된다 
+		cout << "0";
+		return 0;
+	}
+	ch[0]++;
+	ch['n' - 'a']++;
+	ch['t' - 'a']++;
+	ch['i' - 'a']++;
+	ch['c' - 'a']++;
+	back(0, 5);
+	cout << ans;
+	return 0;
+}
