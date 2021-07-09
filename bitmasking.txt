@@ -1,0 +1,51 @@
+#include <iostream>
+
+using namespace std;
+
+
+void t1(int t) {
+	int idx = 0;
+	int tmp = t;  // ex  : 5    101
+	tmp &= ~(1 << idx);
+	cout << "idx 번째 인덱스 끄기" << tmp << endl;   // ex : idx가 0이라면 100 
+}
+
+void t2(int t) {
+	int tmp = t; // -> 5    101
+	int idx = 0;          //001            
+	tmp ^= (1 << idx); // tmp -> 4 0> 100이된다
+	cout << "xor : " << tmp << endl;
+}
+//펜윅트리 최하위 켜져있는 인덴스  10100001 일경우 제 오른쪽 1 
+void t3(int t) {
+	int idx = (t & -t);  // ex :5  - > 101 & -101  
+	cout << "최하위 켜져있는 인덱스 : " << idx << endl;     
+}
+//크기 n인 모든집한 비트 켜기 
+void t4(int t) {
+	int n = 4;
+	cout << "크기가 n인 모든 집한 비트 켜기 : " << (1 << 4) - 1 << endl;  // 
+}
+void t5(int t) {
+	int idx = 0;
+	int tmp = t;
+
+	tmp |= (1 << idx);
+	cout << "idx번째 불키기 " << tmp << endl;
+}
+//idx번째 인덱스 있는지 확인하기 
+void t6(int t) {
+	int idx = 0;
+	int temp = t;  // 101 
+	string a = temp & (1 << idx) ? "yes" : "no";           //  101 & 001  -> 0번째 인덱스 있다 
+	cout << "idx번째 비트있는지 확인하기 : " << a << endl;
+}
+/*
+사과 딸기 포도, 배 모든 경우의 수를 이진수로 나타낼 수 있다 
+0001 0010 0011  00100 00101 .....
+for(int i = 0 ;  i < (1 << 4); i++)  ->   0 ~ 15까지 
+*/
+int main() {
+
+	return 0;
+}

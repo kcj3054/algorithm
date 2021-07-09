@@ -1,0 +1,33 @@
+#include <iostream>
+#include <queue>
+#include <algorithm>
+using namespace std;
+
+
+int main() {
+	int t = 0; cin >> t;
+	while (t--) {
+		int ans = 1;
+		int n = 0; cin >> n;
+		vector<pair<int, int>> v;
+		v.resize(n);
+		for (int i = 0; i < n; i++) {
+			cin >> v[i].first >> v[i].second;
+		}
+		sort(v.begin(), v.end());
+
+		int tmp = v[0].second;
+		//성적 젤 좋은애 일단 뽑고 - > 
+		//그 사람의 인터뷰성적 다음 사람들의 면접 점수 비교하면서 갱신 비교 갱신 
+		//
+		for (int i = 1; i < v.size(); ++i) {
+			
+			if (v[i].second < tmp) {
+				ans++;
+				tmp = v[i].second;
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}
