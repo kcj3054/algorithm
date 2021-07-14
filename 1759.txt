@@ -1,0 +1,74 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+#define MAX 15
+
+vector<char> v;
+bool visited[MAX];
+vector<char>pw;
+
+int l, c;
+
+
+void combination(int idx, int cnt)
+{
+	if (cnt == l)
+	{
+
+		//최소 하나의 모음과 두개의 자음으로 구성 
+		int mo = 0;
+		int ja = 0;
+		for (auto i : pw)
+		{
+			if (i == 'a' || i == 'e' || i == 'i' || i == 'o' || i == 'u')
+				mo++;
+			else
+				ja++;
+		}
+
+	
+		if (mo >= 1 && ja >= 2) {
+			for (int i = 0; i < pw.size(); i++)
+			{
+				cout << pw[i];
+			}
+			cout << endl;
+		}
+
+	}
+
+	for (int i = idx; i < v.size(); i++)
+	{
+		if (visited[i])continue;
+
+		visited[i] = true;
+		pw.push_back(v[i]);
+
+		combination(i + 1, cnt + 1);
+		visited[i] = false;
+		pw.pop_back();
+	}
+}
+
+int main() {
+	ios::sync_with_stdio(0);
+
+	cin >> l >> c;
+
+
+	for (int i = 0; i < c; i++)
+	{
+		char a;
+		cin >> a;
+		v.push_back(a);
+	}
+
+
+	sort(v.begin(), v.end());
+
+	combination(0, 0);
+
+}

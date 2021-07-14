@@ -1,0 +1,39 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cmath>
+using namespace std;
+
+int ans;
+int ch[26];
+int n;
+string s;
+//ab , ba 일경우 10a + 1b , 10b + 1a 
+
+bool cmp(int a, int b) {
+	if (a > b) return true;
+	else return false;
+}
+int main() {
+
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> s;
+		int pos = pow(10, s.length() - 1);
+		for (int i = 0; i < s.length(); i++)
+		{
+			ch[s[i] - 'A'] += pos;
+			pos /= 10;
+		}
+	}
+	sort(ch, ch + 26, cmp);
+	int key = 9;
+	for (int i = 0; i < 26; i++)
+	{
+		if (ch[i] == 0) break;
+		ans += ch[i] * key--;
+	}
+	cout << ans;
+	return 0;
+}
