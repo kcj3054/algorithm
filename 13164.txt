@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define ll long long
+
+int n, k;
+int main() {
+	
+	ios::ios_base::sync_with_stdio(0); cin.tie(0);
+	cin >> n >> k;
+	vector<int> v;
+	v.resize(n);
+	vector<int> dif;
+	for (int i = 0; i < n; ++i) {
+		cin >> v[i];
+	}
+
+	// 1 2 3 6 7 9 10
+	// [   ] [ ] [  ]
+	//-1  +3-6+7-9+10
+
+	// 1 2 3 6 7 9 10
+	// [   ] [ ] [  ]
+	//-1  +3-6+7-9+10
+
+
+	for (int i = 0; i < n -1 ; ++i) {
+		 int tmp = v[i + 1] - v[i];   // check 
+		 dif.push_back(tmp);
+	}
+	sort(dif.rbegin(), dif.rend());
+	
+	int ans = 0;
+	ans -= v[0];
+	ans += v[n - 1];
+
+	for (int i = 0; i < k - 1; ++i) {
+		//cout << dif[i] << " "; 
+		ans -= dif[i];
+	}
+	cout << ans;
+
+	return 0;
+}
