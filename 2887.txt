@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+
+using namespace std;
+
+struct point {
+	int value;
+	int v1;
+	int v2;
+};
+bool operator<(point a, point b) {
+	return a.value < b.value;
+}
+vector<pair<int, int >> x, y, z;
+vector<point> v;
+int n;
+int p[100001];
+
+int find(int v) {
+	if (v == p[v]) return v;
+	else return p[v] = find(p[v]);
+}
+void _union(int a, int b) {
+	a = find(a);
+	b = find(b);
+	if (a != b) {
+		p[a] = b;
+	}
+}
+int main() {
+	cin >> n;
+	for (int i = 0; i < n; ++i) p[i] = i;
+
+	for (int i = 0; i < n; i++)
+	{
+		int a = 0, b = 0, c = 0;
+		cin >> a >> b >> c;
+		x.push_back({ a, i });
+		y.push_back({ b, i });
+		z.push_back({ c, i });
+	}
+
+
+	sort(x.begin(), x.end());
+	sort(y.begin(), y.end());
+	sort(z.begin(), z.end());
+	//v에 x, y,z 값을 정렬된 상태에서 다  넣어서 정렬하면 거기서  오름차순으로 된다 
+	//순서대로 _union하면 나중에 뒷수의 큰 값들은 앞의 작은 값들로 벌써 _union이 되었기에 큰 값들은 신경 안써도된다 
+	//결론 -> 작은 값들로 _union될 수 있다 
+	for (int i = 0; i < n - 1; i++)
+	{
+		v.push_back({ x[i + 1].first - x[i].first , x[i].second, x[i + 1].second });
+		v.push_back({ y[i + 1].first - y[i].first, y[i].second, y[i + 1].second });
+		v.push_back({ z[i + 1].first - z[i].first, z[i].second, z[i + 1].second });
+	}
+
+	sort(v.begin(), v.end());
+
+	int ans = 0;
+	for (int i = 0; i < v.size(); i++)
+	{
+		int a = v[i].v1;
+		int b = v[i].v2;
+		int cost = v[i].value;
+		a = find(a);
+		b = find(b);
+
+		if (a != b) {
+			_union(a, b);
+			ans += cost;
+		}
+	}
+
+
+	cout << ans;
+	return 0;
+}

@@ -1,0 +1,29 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+int t; 
+set<char> s[2];  //2가지 칼라이기때문에 2개
+int main() {
+	
+	cin >> t;
+	
+	while (t--) {
+		string str; cin >> str;
+		for (auto a : str) {
+			//존재하지않는다 
+			if (s[0].find(a) == s[0].end()) {
+				s[0].insert(a);
+			}
+			else if (s[1].find(a) == s[1].end()) {
+				s[1].insert(a);
+			}
+		}
+
+		cout << (s[0].size() + s[1].size()) / 2 << endl;
+		s[0].clear();
+		s[1].clear();
+	}
+	return 0;
+}
