@@ -1,0 +1,41 @@
+#include <iostream>
+#include <memory.h>
+#include <algorithm>
+#define endl '\n'
+
+using namespace std;
+
+int n, k, ans;
+int dp[101][100001];
+int w[101];
+int v[101];
+
+//1 ~ idx까지 이미 봤을때 현재 idx +1번째를 보고있다.... 남은 무게가 k일때 최대 가치 
+int solve(int idx, int kk) {
+
+	if (idx == n) return 0;
+
+	if (dp[idx][kk] != -1) return dp[idx][kk];
+
+	dp[idx][kk] = 0;
+
+	if (kk - w[idx + 1] >= 0) {
+		dp[idx][kk] = max(solve(idx + 1, kk - w[idx + 1]) + v[idx + 1], solve(idx + 1, kk));
+	}
+	else dp[idx][kk] = solve(idx + 1, kk);
+
+	return dp[idx][kk];
+}
+int main() {
+
+	cin >> n >> k;
+	for (int i = 1; i <= n; ++i) {
+		//무게 가치 
+		cin >> w[i] >> v[i];
+	}
+	memset(dp, -1, sizeof(dp));
+
+	ans = solve(0, k); // 0번째부터봤다 1번째  x, 
+	cout << ans << endl;
+	return 0;
+}

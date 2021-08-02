@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <memory.h>
+#include <algorithm>
+
+#define ll long long
+#define endl '\n'
+using namespace std;
+
+int n, ans;
+int dp[10000];
+vector<int> v;
+int solve(int idx) {
+
+	if (dp[idx] != -1)return dp[idx];
+	
+	dp[idx] = 1;
+
+	for (int i = 0; i < n; ++i) {
+		
+		if (i < idx && v[i] < v[idx]) {
+			dp[idx] = max(solve(i) + 1, dp[idx]);
+		}
+	}
+	return dp[idx];
+}
+int main() {
+
+	cin >> n;
+	v.resize(n);
+	for (auto &i : v) cin >> i;
+
+	memset(dp, -1, sizeof(dp));
+
+	ans = solve(n - 1);
+	for (int i = 0; i < n; i++) {
+		ans = max(ans, solve(i));
+	}
+	cout << ans << endl;
+	
+	return 0;
+}
