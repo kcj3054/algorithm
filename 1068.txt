@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+
+
+using namespace std;
+
+int n, Kill, rootNode, res;
+vector<int> v[51];
+vector<int> ans;
+bool visited[51];
+
+void bfs(int idx) {
+
+	queue<int> q;
+	q.push(idx);
+	visited[idx] = 1;
+
+
+	while (!q.empty())
+	{
+		int x = q.front();
+		q.pop();
+
+		int chidCnt = 0;
+		for (int i = 0; i < v[x].size(); i++)
+		{
+			int nx = v[x][i];
+			if (!visited[nx]) {
+				visited[nx] = 1;
+				q.push(nx);
+				chidCnt++;
+			}
+		}
+		if (chidCnt == 0) {
+			res++;
+		}
+	}
+
+}
+int main() {
+
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		int tmp = 0; cin >> tmp;
+		if (tmp == -1) {
+			rootNode = i;
+		}
+		else
+		{
+			v[tmp].push_back(i);
+			v[i].push_back(tmp);
+		}
+		
+	}
+	cin >> Kill;
+	visited[Kill] = 1;
+
+	if (!visited[rootNode]) bfs(rootNode);
+	cout << res;
+	return 0;
+}
