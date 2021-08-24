@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int n, errorN, res;
+bool isBroke[10];
+
+int possible(int num) {
+	if (num == 0) return isBroke[num] ? 0 : 1; 
+	
+	int len = 0;
+	while (num > 0)
+	{
+		int tmp = num % 10;
+		if (isBroke[tmp]) {
+			return 0;
+		}
+		num /= 10;
+		len++;
+	}
+	return len;
+}
+int main() {
+
+	cin >> n >> errorN;
+	res = abs(n - 100);
+
+	for (int i = 0; i < errorN; i++)
+	{
+		int tmp = 0; cin >> tmp;
+		isBroke[tmp] = 1;
+	}
+	/*
+	백만인 이유 !
+	0 ~ 50만까지 가면 50만이다 
+	그러나 다 고장나서 백만에서 내려 올 수도있다 
+	그래서 이동할 수도있는 수는 100만의 위치에서 가야할 위치n으로 갈 수도있다 
+	*/
+	for (int i = 0; i <= 999999; i++)
+	{
+		int len = possible(i);
+
+		if (len > 0) {
+			int press = abs(i - n);
+
+			if (press + len < res) res = press + len;
+		}
+	}
+	cout << res;
+	
+	return 0;
+}
